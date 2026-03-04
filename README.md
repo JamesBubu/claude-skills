@@ -1,38 +1,58 @@
 # claude-skills
 
-JamesBubu 的個人 Claude Code 自訂 skills（slash commands）。
+JamesBubu 的個人 Claude Code 自訂 skills。
 
-## 安裝方式
+## 兩種格式說明
 
-```bash
-git clone https://github.com/JamesBubu/claude-skills ~/Code/claude-skills
+### `skills/{name}/SKILL.md` — Agent Skill（動態加載）
 
-# 將 commands/ 裡的 skill 檔案複製到 Claude Code 的 user-level commands 目錄
-cp ~/Code/claude-skills/commands/*.md ~/.claude/commands/
+參考 [learn-claude-code s05](https://github.com/shareAI-lab/learn-claude-code) 的設計模式。
+Agent 依據 `description` 欄位判斷「何時自動加載這個 skill」，並透過 `tool_result` 注入。
+
+```
+skills/
+└── obsidian-note/
+    └── SKILL.md     ← YAML frontmatter (name + description trigger) + 技能內容
 ```
 
-之後在 Claude Code 裡直接輸入 `/skill-name` 即可呼叫。
+### `commands/{name}.md` — Claude Code Slash Command（手動呼叫）
+
+放在 `~/.claude/commands/` 後，在 Claude Code 中輸入 `/command-name` 直接觸發。
+
+```
+commands/
+└── obsidian-note.md   ← 直接作為 /obsidian-note 指令的 prompt
+```
 
 ---
 
 ## Skills 清單
 
-| 指令 | 檔案 | 說明 |
-|------|------|------|
-| `/obsidian-note` | `commands/obsidian-note.md` | 將學習筆記、教學計畫、課程重點存入 Obsidian vault |
+| Skill | 觸發方式 | 說明 |
+|-------|---------|------|
+| `obsidian-note` | 自動（agent 判斷）/ `/obsidian-note` | 將學習筆記、教學計畫存入 Obsidian vault |
 
 ---
 
-## 新增 Skill 的方式
+## 安裝 Slash Commands 到 Claude Code
 
-1. 在 `commands/` 資料夾新增一個 `{skill-name}.md` 檔案
-2. 檔案內容即為 Claude 接到指令後要執行的提示（支援 `$ARGUMENTS` 變數）
-3. 執行 `cp commands/{skill-name}.md ~/.claude/commands/` 讓 Claude Code 讀到
-4. Commit & push 到此 repo
+```bash
+git clone https://github.com/JamesBubu/claude-skills ~/Code/claude-skills
+cp ~/Code/claude-skills/commands/*.md ~/.claude/commands/
+```
 
 ---
 
-## Obsidian Vault 路徑（for obsidian-note skill）
+## 新增 Skill 的流程
+
+1. 在 `skills/{name}/` 新增 `SKILL.md`（含 YAML frontmatter）
+2. 若也需要 slash command，在 `commands/{name}.md` 新增對應版本
+3. `cp commands/{name}.md ~/.claude/commands/`
+4. Commit & push
+
+---
+
+## Obsidian Vault（for obsidian-note skill）
 
 - Root: `/Users/chun-yilin/Documents/Obisidian/vaults/Entrepreneur/Entrepreneur`
 - Attachments: `<root>/attachments/`
