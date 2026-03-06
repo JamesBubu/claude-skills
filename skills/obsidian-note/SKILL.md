@@ -65,6 +65,47 @@ status: in-progress | completed
 - Tags: frontmatter only, no inline `#tags`
 - Headings: H1 = title, H2 = sections, H3 = subsections
 
+## Sequence Diagrams（Mermaid）
+
+Obsidian renders Mermaid natively. Add a sequence diagram when the concept involves **message flow, call order, or multi-party interaction**.
+
+### When to add
+
+| Situation | Add diagram? |
+|-----------|-------------|
+| A loop or cycle is explained (e.g. agent loop) | ✅ Yes |
+| Multiple components interact in sequence | ✅ Yes |
+| A dispatch / routing mechanism is explained | ✅ Yes |
+| Simple one-step concept | ❌ Skip |
+
+### Format
+
+````markdown
+```mermaid
+sequenceDiagram
+    actor User
+    participant Agent
+    participant LLM
+    participant Tool
+
+    User->>Agent: prompt
+    Agent->>LLM: messages + tools
+    LLM-->>Agent: tool_use
+    Agent->>Tool: execute
+    Tool-->>Agent: result
+    Agent->>LLM: tool_result
+    LLM-->>Agent: end_turn
+    Agent-->>User: response
+```
+````
+
+### Guidelines
+
+- Keep diagrams **minimal** — only show the key interaction, not every detail
+- Place diagram right after the concept explanation, before the code snippet
+- Use `-->>` for responses, `->>` for requests
+- Label arrows with the actual variable name or message type when helpful (e.g. `stop_reason == "tool_use"`)
+
 ## Execution Steps
 
 1. Identify topic, lesson ID, and content type from the current conversation.
